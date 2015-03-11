@@ -8,3 +8,7 @@ function err {
     echo "$0: error on line $LINENO ‘$BASH_COMMAND’, exiting" >&2
 }
 trap err ERR
+lxc-create -n ceylon-ci -t debian
+trap 'lxc-destroy -n ceylon-ci; err' ERR # clean up the container in any event
+# TODO
+lxc-destroy -n ceylon-ci
