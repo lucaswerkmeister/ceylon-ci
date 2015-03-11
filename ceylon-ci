@@ -3,3 +3,8 @@ if [[ $(id -u) != 0 ]]; then
     echo "$0: this command must be run as root!" >&2
     exit 1
 fi
+set -o errexit # exit immediately if a command fails
+function err {
+    echo "$0: error on line $LINENO ‘$BASH_COMMAND’, exiting" >&2
+}
+trap err ERR
