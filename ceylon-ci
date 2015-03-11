@@ -4,11 +4,20 @@ if [[ $(id -u) != 0 ]]; then
     exit 1
 fi
 set -o errexit # exit immediately if a command fails
+set -o errtrace # … in functions as well
 function err {
     echo "$0: error on line $LINENO ‘$BASH_COMMAND’, exiting" >&2
 }
 trap err ERR
 lxc-create -n ceylon-ci -t debian
 trap 'lxc-destroy -n ceylon-ci; err' ERR # clean up the container in any event
-# TODO
+function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
+function runin { name=$1; shift; run bash -c "cd $name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
+run apt-get install -y openjdk-7-jdk ant git; echo $?
+run mkdir /root/ceylon
+runin '~/ceylon' git clone https://github.com/ceylon/ceylon-dist.git
+runin '~/ceylon/ceylon-dist' ant setup
+runin '~/ceylon/ceylon-dist' ant publish-all
+runin '~/ceylon' git clone https://github.com/ceylon/ceylon.formatter.git
+runin '~/ceylon/ceylon.formatter' ant test
 lxc-destroy -n ceylon-ci
