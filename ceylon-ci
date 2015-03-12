@@ -9,6 +9,7 @@ function err {
     echo "$0: error on line $LINENO ‘$BASH_COMMAND’, exiting" >&2
 }
 trap err ERR
+export LC_ALL=$LANG # needed in container, apparently not set by default
 lxc-create -n ceylon-ci -t debian
 trap 'lxc-destroy -n ceylon-ci; err' ERR # clean up the container in any event
 function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
