@@ -18,6 +18,8 @@ run mkdir /root/ceylon
 runin '/root/ceylon' git clone https://github.com/ceylon/ceylon-dist.git
 runin '/root/ceylon/ceylon-dist' ant setup
 runin '/root/ceylon/ceylon-dist' ant publish-all
+runin '/root/ceylon' git clone https://github.com/ceylon/ceylon-sdk.git
+runin '/root/ceylon/ceylon-sdk' ant publish
 runin '/root/ceylon' git clone https://github.com/ceylon/ceylon.formatter.git
 runin '/root/ceylon/ceylon.formatter' ant test
 lxc-destroy -n ceylon-ci
