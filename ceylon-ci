@@ -28,4 +28,46 @@ function run {
     runin '/root/ceylon/ceylon.formatter' ant test
     lxc-destroy -n ceylon-ci
 }
+mailText() {
+    sleep 1
+    echo EHLO lucaswerkmeister.de
+    sleep 2
+    cat <<EOF
+MAIL FROM: <bot@lucaswerkmeister.de>
+RCPT TO: <mail@lucaswerkmeister.de>
+DATA
+Subject: [ceylon-ci] $(date -Idate)
+Date: $(date -R)
+From: <bot@lucaswerkmeister.de>
+To: <mail@lucaswerkmeister.de>
+Message-ID: <ceylon-ci-$(date +%s)@lucaswerkmeister.de>
+Content-Type: multipart/mixed;
+ boundary="boundary"
+
+This is a multi-part message in MIME format.
+--boundary
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Hi! The Ceylon build failed.
+Here's the last couple of lines of the report:
+
+EOF
+    tail "$1"
+    cat <<EOF
+--boundary
+Content-Type: text/plain; charset=UTF-8;
+ name="report.txt"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="report.txt"
+
+EOF
+	base64 "$1"
+	echo --boundary
+	echo .
+	echo QUIT
+	sleep 1
+}
+
 (run) # use subshell: don’t exit when run function exits
