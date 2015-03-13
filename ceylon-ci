@@ -19,7 +19,9 @@ function run {
     runin '/root/ceylon' git clone https://github.com/ceylon/ceylon-sdk.git &&
     runin '/root/ceylon/ceylon-sdk' ant publish &&
     runin '/root/ceylon' git clone https://github.com/ceylon/ceylon.formatter.git &&
-    runin '/root/ceylon/ceylon.formatter' ant test
+    runin '/root/ceylon/ceylon.formatter' ant test publish &&
+    runin '/root/ceylon' git clone https://github.com/ceylon/ceylon.ast.git &&
+    runin '/root/ceylon/ceylon.ast' ant test
     
     status=$?
     lxc-destroy -fn ceylon-ci
