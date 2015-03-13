@@ -70,5 +70,5 @@ EOF
 }
 
 if ! (run &> /tmp/report); then # use subshell: don’t exit when run function exits
-    mailText /tmp/report | telnet localhost 25
+    mailText /tmp/report | netcat localhost 25 > /dev/null
 fi
