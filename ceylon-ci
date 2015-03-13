@@ -15,7 +15,7 @@ function run {
     trap 'lxc-destroy -n ceylon-ci; err' ERR # clean up the container in any event
     function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
     function runin { name=$1; shift; run bash -c "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre; cd $name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
-    run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git; echo $?
+    run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git
     run mkdir /root/ceylon
     runin '/root/ceylon' git clone https://github.com/ceylon/ceylon-dist.git
     runin '/root/ceylon/ceylon-dist' ant setup
