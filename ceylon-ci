@@ -70,4 +70,6 @@ EOF
 	sleep 1
 }
 
-(run) # use subshell: don’t exit when run function exits
+if ! (run &> /tmp/report); then # use subshell: don’t exit when run function exits
+    mailText /tmp/report | telnet localhost 25
+fi
