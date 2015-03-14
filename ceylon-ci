@@ -5,7 +5,7 @@ if [[ $(id -u) != 0 ]]; then
 fi
 function run {
     export LC_ALL=$LANG # needed in container, apparently not set by default
-    lxc-create -n ceylon-ci -t debian
+    lxc-create -n ceylon-ci -t debian || return $?
     function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
     function runin { name=$1; shift; run bash -c "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre; cd $name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
     
