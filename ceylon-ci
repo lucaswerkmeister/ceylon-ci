@@ -14,14 +14,15 @@ function run {
     run apt-get update &&
     run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git &&
     run mkdir /root/ceylon &&
-    runin . git clone https://github.com/ceylon/ceylon-dist.git &&
+    runin . git clone --depth=1 https://github.com/ceylon/ceylon-dist.git &&
+    runin ceylon-dist sed -i 's\|\<arg\ value=\"clone\"/\>\|\<arg\ value=\"clone\"/\>\ \<arg\ value=\"--depth=1\"/\>\|' build.xml # add --depth=1 option to git; needs nasty quoting
     runin ceylon-dist ant setup &&
     runin ceylon-dist ant publish-all &&
-    runin . git clone https://github.com/ceylon/ceylon-sdk.git &&
+    runin . git clone --depth=1 https://github.com/ceylon/ceylon-sdk.git &&
     runin ceylon-sdk ant publish &&
-    runin . git clone https://github.com/ceylon/ceylon.formatter.git &&
+    runin . git clone --depth=1 https://github.com/ceylon/ceylon.formatter.git &&
     runin ceylon.formatter ant test publish &&
-    runin . git clone https://github.com/ceylon/ceylon.ast.git &&
+    runin . git clone --depth=1 https://github.com/ceylon/ceylon.ast.git &&
     runin ceylon.ast ant test
     
     status=$?
