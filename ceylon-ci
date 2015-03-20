@@ -8,12 +8,16 @@ function run {
     lxc-create -n ceylon-ci -t debian || return $?
     local builddir=/build
     local builduser=nobody
+    local javahome=/usr/lib/jvm/java-7-openjdk-amd64/jre
     function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
-    function runin { name=$1; shift; run sudo -u $builduser -- bash -c "export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre; cd $builddir/$name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
+    function runin { name=$1; shift; run sudo -u $builduser -- bash -c "export JAVA_HOME=$javahome; cd $builddir/$name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
     
     cp {,/var/lib/lxc/ceylon-ci/rootfs}/etc/apt/sources.list &&
     run apt-get update &&
     run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git sudo &&
+    run mv $javahome/bin/java{,-orig} &&
+    echo -e '#!/bin/bash\n'$javahome'/bin/java-orig -Xmx500M "$@"' | run tee $javahome/bin/java > /dev/null &&
+    run chmod +x $javahome/bin/java &&
     run mkdir $builddir &&
     run chown nobody $builddir &&
     run usermod --home $builddir $builduser &&
