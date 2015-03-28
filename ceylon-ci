@@ -37,7 +37,7 @@ function run {
     return $status
 }
 if ! (run &> /tmp/report); then # use subshell: don’t exit when run function exits
-    sendmail -f bot@lucaswerkmeister.de -F "Ceylon CI Bot" mail@lucaswerkmeister.de << EOF
+    sendmail -f bot@lucaswerkmeister.de -F "Ceylon CI Bot" mail@lucaswerkmeister.de $(tr a-zA-Z n-za-mN-ZA-M `#rot13` <<< 'gnxb@prlyba-ynat.bet') << EOF
 Subject: [ceylon-ci] $(date -Idate)
 Content-Type: multipart/mixed;
  boundary="boundary"
