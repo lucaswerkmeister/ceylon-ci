@@ -12,7 +12,7 @@ function run {
     function run { lxc-start -n ceylon-ci -- "$@"; } # warning: lxc-execute doesn’t work (requires lxc within container)
     function runin { name=$1; shift; run sudo -u $builduser -- bash -c "export JAVA_HOME=$javahome; cd $builddir/$name; $*"; } # yes, $*, not $@. Needs to be within the -c argument!
     
-    run tee /etc/apt/sources.list < /etc/apt/sources.list > /dev/null &&
+#   run tee /etc/apt/sources.list < /etc/apt/sources.list > /dev/null &&
     run apt-get update &&
     run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git sudo &&
     run mv $javahome/bin/java{,-orig} &&
