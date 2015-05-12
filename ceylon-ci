@@ -34,6 +34,10 @@ function run {
     runin ceylon.ast ant test
     
     status=$?
+    if [[ $status != 0 ]]; then
+        # back up for future investigation
+        lxc-clone -o ceylon-ci -n ceylon-ci-$(date +%F)
+    fi
     lxc-destroy -fn ceylon-ci
     return $status
 }
