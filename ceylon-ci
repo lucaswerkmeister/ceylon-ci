@@ -15,7 +15,7 @@ function run {
     
 #   run tee /etc/apt/sources.list < /etc/apt/sources.list > /dev/null &&
     run apt-get update &&
-    run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git sudo nodejs &&
+    run apt-get install --yes --no-install-recommends openjdk-7-jdk ant git sudo nodejs tree &&
     run mv $javahome/bin/java{,-orig} &&
     echo -e '#!/bin/bash\n'$javahome'/bin/java-orig -Xmx500M "$@"' | run tee $javahome/bin/java > /dev/null &&
     run chmod +x $javahome/bin/java &&
@@ -27,7 +27,7 @@ function run {
     runin . git clone --depth=1 https://github.com/ceylon/ceylon-sdk.git &&
     runin ceylon-sdk ant publish &&
     runin . git clone --depth=1 https://github.com/ceylon/ceylon.formatter.git &&
-    runin ceylon.formatter ant test publish &&
+    runin ceylon.formatter 'PATH=$PATH:'$builddir'/ceylon/dist/dist/bin' ant test publish &&
     runin . git clone --depth=1 https://github.com/ceylon/ceylon.ast.git &&
     runin ceylon.ast ant test
     
